@@ -129,25 +129,9 @@ class Graph(object):
                 # by calling the same method to generate a path, if possible
                 newpath = self.find_path(node.id,end,path) 
                 # if the path generated is feasible, return this as the output of the method.
-                if newpath: return newpath 
+                if newpath: return newpath # as long as we find one, we return.
     
         return None
-    
-    # An extension of method find_paths; returns a list of all paths (witout cycles)
-    def find_all_paths(self,start,end,path=[]):
-        path = path + [start]
-        if start == end:
-            return [path]
-        if start not in self.vert_dict:
-            return []
-        paths = []
-        for node in self.vert_dict[start].adjacent:
-            if node.id not in path:
-                newpaths = self.find_all_paths(node.id,end,path)
-                for newpath in newpaths:
-                    paths.append(newpath)
-        
-        return paths
     
     # An extension of method find_all_paths; find the shortest path without cycles. 
     def find_shortest_path(self,start,end,path=[]):
@@ -161,13 +145,29 @@ class Graph(object):
             if node.id not in path: # avoid cycles
                 newpath = self.find_shortest_path(node.id,end,path)
                 if newpath:
-                    # Update takes place for cases either shortest absnets 
-                    # or newpath shorter than the shortest
                     if not shortest or len(newpath)<len(shortest):
                         shortest = newpath
         
         return shortest
     
+    # An extension of method find_paths; returns a list of all paths (witout cycles)
+    def find_all_paths(self,start,end,path=[]):
+        path = path + [start]
+        if start == end:
+            return [path] # we don't want to merge all the returns as a list.
+        if start not in self.vert_dict:
+            return []
+        paths = [] # initialization of list. Must have it.
+        for node in self.vert_dict[start].adjacent:
+            if node.id not in path:
+                # extend the list, path, if possible. 
+                newpaths = self.find_all_paths(node.id,end,path) 
+                for newpath in newpaths:
+                    paths.append(newpath) # we save all the possible paths.
+        
+        return paths
+
+    # Similar trick to method find_all_paths, but use generator for convenience
     def search_cycles(self,start,end):    
         fringe = [(start,[])]
         while fringe:
