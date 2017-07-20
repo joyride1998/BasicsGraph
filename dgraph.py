@@ -58,6 +58,7 @@ class Graph(object):
     def __init__(self):
         self.vert_dict = {} # A dictionary comprised of "vertex objects" 
         self.num_vertices = 0
+        self.num_edges = 0
         
     # Make it easy to iterate over all the vertex "objects" in the graph object (so as to respective adjacent vertices).
     def __iter__(self):
@@ -79,6 +80,7 @@ class Graph(object):
             self.add_vertex(to)
             
         self.vert_dict[frm].add_neighbor(self.vert_dict[to],cost)
+        self.num_edges = self.num_edges + 1
         #self.vert_dict[to].add_neighbor(self.vert_dict[frm],cost) # Flag no.1
         
     # Obtain all the adjacent vertices of the input vertex.
@@ -186,6 +188,9 @@ class Graph(object):
     
     def has_cycles(self):
         return ("Yes" if len(self.show_all_cycles())>0 else "No")
+    
+    
+#def random_directed_graph(nodes, num_edges):
         
     
 if __name__ == '__main__':
@@ -218,6 +223,8 @@ if __name__ == '__main__':
             vid = v.get_id()
             wid = w.get_id()
             print '( %s , %s, %3d)'  % ( vid, wid, v.get_weight(w))
+            
+    print '\n total: %s edges' % (g.num_edges)
 
     print("\n"+"[2] The adjacent verties for each single vertex in the graph:"+"\n")
     for v in g:
@@ -234,6 +241,7 @@ if __name__ == '__main__':
 
     print("\n"+"[6] Show all possible cycles:"+"\n")
     print(g.show_all_cycles())
+    
     
 
     
